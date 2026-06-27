@@ -1,0 +1,6 @@
+# Normalize line endings in the repository to LF.
+* text=auto
+
+# Scripts must stay LF so they run on Unix/CI regardless of who commits them.
+*.sh  text eol=lf
+*.mjs text eol=lf
