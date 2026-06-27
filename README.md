@@ -16,10 +16,16 @@ It supersedes the online-only `find-skills` skill by adding local search, scorin
 
 ## Install
 
-`autoskills` is a Claude Code skill. Copy it into your skills directory:
+`autoskills` is a Claude Code skill. Install it with the [`skills`](https://www.npmjs.com/package/skills) CLI:
 
 ```bash
-git clone <this-repo-url> autoskills
+npx skills add <owner>/autoskills -g -a claude-code -y
+```
+
+Or install manually:
+
+```bash
+git clone https://github.com/<owner>/autoskills.git
 cp -r autoskills ~/.claude/skills/autoskills
 ```
 
@@ -33,19 +39,23 @@ Invoke it whenever you want to find a skill:
 - Point it at a repo/folder and ask which skills apply.
 - Starting a problem (research, fine-tuning, evaluation, UI, debugging…) where a skill could help.
 
-The workflow (see [`SKILL.md`](SKILL.md)):
+The 8-step workflow: detect input mode → consult memory → gather local + online candidates → evaluate & rank with the rubric → present the top 3–5 → decide → record the outcome → offer a repo-local `CLAUDE.md` reminder. Full detail in [`SKILL.md`](SKILL.md).
 
-| Step | What it does |
-|---|---|
-| 0 | Detect input mode (problem / folder / current task) |
-| 1 | Consult memory (registry) |
-| 2 | Gather local candidates |
-| 3 | Gather online candidates |
-| 4 | Evaluate & rank with the rubric |
-| 5 | Present the top 3–5 |
-| 6 | Decide (recommend / record gap / build new) |
-| 7 | Record the outcome to the registry |
-| 8 | Offer a repo-local `CLAUDE.md` reminder |
+## Example
+
+> **You:** "find me a skill for deep, cited research on a technical topic"
+
+`autoskills` recalls past wins from the registry, gathers local **and** online candidates, scores each against the rubric, and replies with one ranked list:
+
+```
+1. deep-research · local · 9/10 Strong · fan-out web search, adversarial fact-checking,
+   cited report — matches the ask · already invokable
+2. find-skills   · local · 5/10 Decent · discovers/installs skills but online-only,
+   no synthesis · invokable
+   …online candidates are scored into the same list, each with its `npx skills add …` line
+```
+
+It recommends **deep-research**, then records the win so the next research query ranks faster — and offers to drop a `CLAUDE.md` reminder so future sessions in the repo reach for it automatically.
 
 ## Repository layout
 
@@ -56,7 +66,6 @@ The workflow (see [`SKILL.md`](SKILL.md)):
 | `scripts/` | Optional dependency-free Node helpers (local index; `CLAUDE.md` upsert) |
 | `registry/` | Seeded problem→skill registry |
 | `tests/` | Bash checks for the docs and behavioral tests for the scripts |
-| `docs/superpowers/` | Design specs and implementation plans |
 
 ## Development
 
