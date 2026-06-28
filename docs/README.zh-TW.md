@@ -4,12 +4,12 @@
 
 **為 [Claude Code](https://claude.com/claude-code) 打造的元技能 —— _一個用來尋找合適技能的技能。_**
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](../LICENSE)
 [![Built for Claude Code](https://img.shields.io/badge/Built%20for-Claude%20Code-d97757)](https://claude.com/claude-code)
-[![Type](https://img.shields.io/badge/type-skill-8A2BE2)](SKILL.md)
+[![Type](https://img.shields.io/badge/type-skill-8A2BE2)](../SKILL.md)
 [![Install](https://img.shields.io/badge/install-npx%20skills-CB3837?logo=npm&logoColor=white)](https://www.npmjs.com/package/skills)
 
-[English](README.md) · [简体中文](README.zh-CN.md) · **繁體中文** · [日本語](README.ja.md) · [한국어](README.ko.md)
+[English](../README.md) · [简体中文](README.zh-CN.md) · **繁體中文** · [日本語](README.ja.md) · [한국어](README.ko.md)
 
 </div>
 
@@ -52,7 +52,7 @@ cp -r autoskills ~/.claude/skills/autoskills
 - 把它指向某個儲存庫/資料夾，問哪些技能適用。
 - 著手一個問題（研究、微調、評估、UI、除錯……）時，某個技能可能會有幫助。
 
-8 步工作流程：辨識輸入模式 → 查詢記憶 → 收集本地 + 線上候選 → 用評分標準評估並排序 → 呈現前 3–5 名 → 做出決定 → 記錄結果 → 提議在儲存庫內寫入 `CLAUDE.md` 提示。完整細節見 [`SKILL.md`](SKILL.md)。
+8 步工作流程：辨識輸入模式 → 查詢記憶 → 收集本地 + 線上候選 → 用評分標準評估並排序 → 呈現前 3–5 名 → 做出決定 → 記錄結果 → 提議在儲存庫內寫入 `CLAUDE.md` 提示。完整細節見 [`SKILL.md`](../SKILL.md)。
 
 ## 💡 範例
 
@@ -90,6 +90,6 @@ bash tests/check-integration.sh   # 執行所有文件檢查 + 行為測試
 
 ## 📄 授權
 
-採用 Apache License 2.0 版授權 —— 詳見 [`LICENSE`](LICENSE) 與 [`NOTICE`](NOTICE)。
+採用 Apache License 2.0 版授權 —— 詳見 [`LICENSE`](../LICENSE) 與 [`NOTICE`](../NOTICE)。
 
 著作權所有 © 2026 KO Ho Tin。

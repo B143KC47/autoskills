@@ -4,12 +4,12 @@
 
 **[Claude Code](https://claude.com/claude-code) のためのメタスキル —— _最適なスキルを見つけるためのスキル。_**
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](../LICENSE)
 [![Built for Claude Code](https://img.shields.io/badge/Built%20for-Claude%20Code-d97757)](https://claude.com/claude-code)
-[![Type](https://img.shields.io/badge/type-skill-8A2BE2)](SKILL.md)
+[![Type](https://img.shields.io/badge/type-skill-8A2BE2)](../SKILL.md)
 [![Install](https://img.shields.io/badge/install-npx%20skills-CB3837?logo=npm&logoColor=white)](https://www.npmjs.com/package/skills)
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · **日本語** · [한국어](README.ko.md)
+[English](../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · **日本語** · [한국어](README.ko.md)
 
 </div>
 
@@ -52,7 +52,7 @@ cp -r autoskills ~/.claude/skills/autoskills
 - リポジトリ／フォルダを指して、どのスキルが当てはまるか尋ねる。
 - 課題（リサーチ、ファインチューニング、評価、UI、デバッグ……）に取りかかるとき、スキルが役立ちそうな場面で。
 
-8 ステップのワークフロー: 入力モードを判定 → メモリを参照 → ローカル + オンラインの候補を収集 → ルーブリックで評価・ランキング → 上位 3〜5 件を提示 → 決定 → 結果を記録 → リポジトリ内 `CLAUDE.md` リマインダーを提案。詳細は [`SKILL.md`](SKILL.md) を参照してください。
+8 ステップのワークフロー: 入力モードを判定 → メモリを参照 → ローカル + オンラインの候補を収集 → ルーブリックで評価・ランキング → 上位 3〜5 件を提示 → 決定 → 結果を記録 → リポジトリ内 `CLAUDE.md` リマインダーを提案。詳細は [`SKILL.md`](../SKILL.md) を参照してください。
 
 ## 💡 例
 
@@ -90,6 +90,6 @@ bash tests/check-integration.sh   # すべてのドキュメントチェック +
 
 ## 📄 ライセンス
 
-Apache License, Version 2.0 のもとでライセンスされています —— [`LICENSE`](LICENSE) と [`NOTICE`](NOTICE) を参照してください。
+Apache License, Version 2.0 のもとでライセンスされています —— [`LICENSE`](../LICENSE) と [`NOTICE`](../NOTICE) を参照してください。
 
 Copyright © 2026 KO Ho Tin.
