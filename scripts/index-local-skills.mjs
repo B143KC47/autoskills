@@ -5,6 +5,9 @@
 // given machine. We NEVER crash on a dead link, and we ALWAYS emit the skill
 // NAME — a name is a usable match signal even when its linked content is gone.
 // Usage: node index-local-skills.mjs [keyword]
+// Roots default to ~/.claude/skills and ~/.agents/skills; override with the
+// AUTOSKILLS_SKILL_ROOTS env var (platform path-delimiter-separated) — used by
+// the hermetic tests and useful for nonstandard skill locations.
 //
 // Status values:
 //   ok        SKILL.md is readable and non-empty (usable now)
@@ -12,13 +15,15 @@
 //   unsynced  broken/dead symlink — content unavailable (restore ~/.orchestra/skills)
 //   missing   path not present / not a directory
 import { readdirSync, readFileSync, existsSync, lstatSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, delimiter } from 'node:path';
 import { homedir } from 'node:os';
 
-const ROOTS = [
-  join(homedir(), '.claude', 'skills'),
-  join(homedir(), '.agents', 'skills'),
-];
+const ROOTS = process.env.AUTOSKILLS_SKILL_ROOTS
+  ? process.env.AUTOSKILLS_SKILL_ROOTS.split(delimiter).filter(Boolean)
+  : [
+      join(homedir(), '.claude', 'skills'),
+      join(homedir(), '.agents', 'skills'),
+    ];
 const RANK = { ok: 3, empty: 2, unsynced: 1, missing: 0 };
 const keyword = (process.argv[2] || '').toLowerCase();
 

@@ -52,7 +52,7 @@ Invoke it whenever you want to find a skill:
 - Point it at a repo/folder and ask which skills apply.
 - Starting a problem (research, fine-tuning, evaluation, UI, debugging…) where a skill could help.
 
-The 8-step workflow: detect input mode → consult memory → gather local + online candidates → evaluate & rank with the rubric → present the top 3–5 → decide → record the outcome → offer a repo-local `CLAUDE.md` reminder. Full detail in [`SKILL.md`](SKILL.md).
+The 8-step workflow: detect input mode → consult memory (with a fast path when the registry already knows a strong, invokable match) → gather local + online candidates → evaluate & rank with the rubric → present the top 3–5 → decide → record the outcome → offer a repo-local `CLAUDE.md` reminder. Full detail in [`SKILL.md`](SKILL.md).
 
 ## 💡 Example
 
