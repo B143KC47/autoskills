@@ -1,0 +1,6 @@
+{
+  "auto_install": false,
+  "min_tier": "strong",
+  "trust_floor": 1,
+  "finders": 4
+}

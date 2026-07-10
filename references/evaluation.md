@@ -17,7 +17,7 @@ A candidate AUTO-FAILS (score 0, drop it) if any of:
 |---|---|---|---|
 | **Fit / Relevance** | Description + triggers squarely match the domain AND the specific task | Adjacent domain, or only partly covers the task | Wrong domain / wrong task |
 | **Trust / Provenance** | Online: reputable owner (anthropics, vercel-labs, microsoft) and/or 1K+ installs and/or healthy stars. Local: invokable via the `Skill` tool and/or substantive readable content, known origin | Unknown owner, 100–1K installs, or local with thin content | <100 installs / unknown author / placeholder / `unsynced` (unreadable) |
-| **Track record** | Registry shows it worked before for a similar problem (≥1 successful use or good rating) | No registry history (default) | Registry shows it failed / was a poor fit |
+| **Track record** | Registry shows it worked before for a similar problem (≥1 successful use or good rating) | No registry history (default) | Registry has an outcome note showing it failed / was a poor fit (see `registry-format.md` — judge by the note's `observed`/`evidence`, not opinion) |
 | **Freshness** | Updated recently; references current tools/versions | Age unknown | Clearly abandoned / obsolete tools |
 | **Specificity / Cost** | Focused on exactly this need; low overhead | Broad but usable | Kitchen-sink/unfocused or very heavy for the need |
 

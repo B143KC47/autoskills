@@ -52,4 +52,17 @@ metadata:
 5. Ensure the project pointer line exists in `<project>/memory/MEMORY.md` (create folder/file if absent):
    `- [autoskills] consult ~/.claude/skills/autoskills/registry/ for problem→skill history`
 
+## Outcome notes (objective & verifiable)
+When a skill did NOT help (SKILL.md Step 7), downgrade its `tier:` and append an
+outcome note under the entry. Every field is REQUIRED; every claim must be an
+observable fact a later reader can check — no opinions ("bad skill", "useless"):
+```
+  - outcome | <YYYY-MM-DD> | project:<name> | task:<one line>
+    expected:<what the skill should have done> | observed:<what actually happened>
+    evidence:<command output / error text / file or commit ref>
+```
+The rubric's Track-record dimension reads these notes: one failure note → score 0 for
+similar tasks; a later success note can restore it. Never edit the skill's own upstream
+`SKILL.md` to record a verdict — it is overwritten on reinstall and is not your record.
+
 > Dates: use the session's current date; do not invent one.
