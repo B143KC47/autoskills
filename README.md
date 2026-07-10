@@ -22,8 +22,11 @@ It supersedes the online-only `find-skills` skill by adding local search, scorin
 ## ✨ Features
 
 - **Local + online search** — gathers candidates from your invokable skills and the `npx skills` ecosystem, ranked together.
+- **Multi-agent deep search** — in Claude Code, online discovery runs as a `Workflow`: parallel Sonnet finders sweep four angles (ecosystem, leaderboard, fresh releases, GitHub), then an Opus verifier adversarially scores each candidate. Degrades gracefully to plain subagents, or to a fully sequential flow on harnesses without subagents (e.g. Codex).
 - **Quality rubric** — scores each candidate on Fit, Trust, Track-record, Freshness, and Specificity, with a sanity gate that drops unreadable/placeholder skills.
+- **Config-gated auto-install** — set `auto_install: true` in `config.json` and Opus-verified **Strong** picks (Trust ≥ floor) are installed and used automatically — always reported, never silent. Default is off.
 - **Persistent memory** — a hybrid registry (global store + a one-line per-project pointer) that remembers which skills solved which problems.
+- **Verifiable feedback loop** — when work finishes, the agent self-assesses whether each skill helped; failures are recorded as objective, evidence-backed outcome notes that future rankings read.
 - **Availability-aware** — only recommends skills usable right now; catalogs preferred-but-unsynced ones without recommending them.
 - **Repo-local reminders** — offers to write a consent-gated, idempotent `CLAUDE.md` block so future agents in a repo know which skills to use.
 
@@ -52,7 +55,20 @@ Invoke it whenever you want to find a skill:
 - Point it at a repo/folder and ask which skills apply.
 - Starting a problem (research, fine-tuning, evaluation, UI, debugging…) where a skill could help.
 
-The 8-step workflow: detect input mode → consult memory (with a fast path when the registry already knows a strong, invokable match) → gather local + online candidates → evaluate & rank with the rubric → present the top 3–5 → decide → record the outcome → offer a repo-local `CLAUDE.md` reminder. Full detail in [`SKILL.md`](SKILL.md).
+The 8-step workflow: detect input mode + read config → consult memory (with a fast path when the registry already knows a strong, invokable match) → deep-search online candidates (only when no strong local match, or when you ask for an online search) → evaluate & rank with the rubric → present the top 3–5 → decide (auto-install if configured) → record the outcome with verifiable notes → offer a repo-local `CLAUDE.md` reminder. Full detail in [`SKILL.md`](SKILL.md).
+
+### ⚙️ Configuration
+
+Create `config.json` next to `SKILL.md` (see [`config.json.example`](config.json.example)):
+
+```json
+{
+  "auto_install": false,   // true → install + use Strong verified picks without asking
+  "min_tier": "strong",    // auto-install tier floor
+  "trust_floor": 1,        // rubric Trust score required for auto-install
+  "finders": 4             // parallel finder agents in the deep-search workflow
+}
+```
 
 ## 💡 Example
 
@@ -75,7 +91,8 @@ It recommends **deep-research**, then records the win so the next research query
 | Path | Purpose |
 |---|---|
 | `SKILL.md` | The orchestration workflow (entry point) |
-| `references/` | Rubric, registry format, folder-scan map, `CLAUDE.md` procedure |
+| `references/` | Rubric, deep-search workflow template, registry format, folder-scan map, `CLAUDE.md` procedure |
+| `config.json.example` | Config schema (auto-install gate, finder count) |
 | `scripts/` | Optional dependency-free Node helpers (local index; `CLAUDE.md` upsert) |
 | `registry/` | Seeded problem→skill registry |
 | `tests/` | Bash checks for the docs and behavioral tests for the scripts |
