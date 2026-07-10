@@ -1,6 +1,7 @@
 {
   "auto_install": false,
   "min_tier": "strong",
-  "trust_floor": 1,
-  "finders": 4
+  "trust_floor": 2,
+  "finders": 4,
+  "max_verify": 10
 }

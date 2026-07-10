@@ -35,7 +35,9 @@ Detected domain(s): <domain list>. Use these skills proactively — don't wait t
 **Make available first, then use**:
 - `<owner/repo@skill>` — <use-when> · install: `npx skills add <owner/repo@skill> -g -y`
 
-Full problem→skill history: consult `~/.claude/skills/autoskills/registry/`.
+After finishing work that used one of these skills, record whether it helped (autoskills Step 7 — objective outcome notes).
+
+Full problem→skill history: consult the autoskills `registry/` folder (Claude Code: `~/.claude/skills/autoskills/registry/`).
 
 _Last updated by autoskills: <YYYY-MM-DD>._
 ```

@@ -11,7 +11,7 @@ grep -qi "find-skills" SKILL.md
 grep -q "Step 8" SKILL.md
 grep -q "references/claude-md.md" SKILL.md
 # all per-file checks still pass
-for t in check-skill-md check-evaluation check-registry check-folder-scan check-claude-md check-config check-deep-search; do bash "tests/$t.sh" >/dev/null; done
+for t in check-skill-md check-evaluation check-registry check-folder-scan check-claude-md check-config check-deep-search check-workflow-syntax; do bash "tests/$t.sh" >/dev/null; done
 bash tests/test-index-local-skills.sh >/dev/null
 bash tests/test-upsert-claude-md.sh >/dev/null
 echo "PASS check-integration"

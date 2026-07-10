@@ -1,8 +1,8 @@
 # Registry Format & Recording Procedure
 
 The registry is the skill's persistent memory. It is HYBRID:
-- **Global store** (cross-project, read every invoke): `~/.claude/skills/autoskills/registry/`
-- **Project pointer** (auto-loaded each session): one line in the project's `memory/MEMORY.md`
+- **Global store** (cross-project, read every invoke): `<skill-root>/registry/` — the installed skill's own directory (Claude Code: `~/.claude/skills/autoskills/registry/`; other harnesses: wherever the skill is installed).
+- **Project pointer** (auto-loaded each session): one line in the project's `memory/MEMORY.md` on Claude Code. On harnesses without auto-loaded memory (e.g. Codex), the equivalent line goes in the repo's `AGENTS.md` instead.
 
 Claude Code memory is project-scoped only (no global tier), and `MEMORY.md` auto-loads the first ~200 lines each session. The global registry gives cross-project recall; the project pointer makes the agent aware the registry exists.
 
@@ -53,9 +53,9 @@ metadata:
    `- [autoskills] consult ~/.claude/skills/autoskills/registry/ for problem→skill history`
 
 ## Outcome notes (objective & verifiable)
-When a skill did NOT help (SKILL.md Step 7), downgrade its `tier:` and append an
-outcome note under the entry. Every field is REQUIRED; every claim must be an
-observable fact a later reader can check — no opinions ("bad skill", "useless"):
+When a skill did NOT help (SKILL.md Step 7), move its `tier:` per the state machine
+below and append an outcome note under the entry. Every field is REQUIRED; every claim
+must be an observable fact a later reader can check — no opinions ("bad skill", "useless"):
 ```
   - outcome | <YYYY-MM-DD> | project:<name> | task:<one line>
     expected:<what the skill should have done> | observed:<what actually happened>
@@ -64,5 +64,18 @@ observable fact a later reader can check — no opinions ("bad skill", "useless"
 The rubric's Track-record dimension reads these notes: one failure note → score 0 for
 similar tasks; a later success note can restore it. Never edit the skill's own upstream
 `SKILL.md` to record a verdict — it is overwritten on reinstall and is not your record.
+
+**Retention:** keep only the 3 newest outcome notes per skill. When adding a 4th,
+replace the oldest with a one-line rollup:
+`  - earlier: <n> more failure(s)/success(es), <YYYY-MM>–<YYYY-MM>`
+
+### Tier movement (deterministic)
+- 1 failure note → drop ONE tier (Strong→Decent→Weak).
+- A failure while already at Weak, or 2 consecutive failures → move the entry to
+  `## Gaps` (stop recommending it).
+- A later success note → restore one tier (never above Strong) and return the entry to
+  `## Works` if it was in `## Gaps`.
+- The `tier:` label is a cached last evaluation; the Step 4 rubric recomputes at search
+  time and may override it.
 
 > Dates: use the session's current date; do not invent one.
