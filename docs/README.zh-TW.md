@@ -30,6 +30,45 @@
 - **可用性感知** —— 只推薦當前可直接使用的技能；對那些「優先但尚未同步」的技能則只登錄而不推薦。
 - **儲存庫內提示** —— 可在徵得同意後，向儲存庫寫入一段冪等的 `CLAUDE.md` 區塊，讓該儲存庫後續的代理知道該用哪些技能。
 
+## 🔍 運作原理
+
+```mermaid
+flowchart TD
+    A["🎯 你的問題 · 儲存庫 · 當前任務"] --> B["📇 讀取設定 &<br/>查詢註冊表記憶"]
+    B -->|"⚡ 快速路徑：註冊表已知<br/>一個 Strong 且可呼叫的匹配"| P
+    B --> C["🗂️ 收集並評分<br/>本地候選"]
+    C -->|"本地已有 Strong 匹配"| M
+    C -->|"無 Strong 匹配，<br/>或你要求線上搜尋"| DS
+
+    subgraph DS ["🌐 深度搜尋 —— 多代理"]
+        direction TB
+        F1["🔎 Sonnet 尋找器<br/>npx skills find"]
+        F2["🏆 Sonnet 尋找器<br/>skills.sh 排行榜"]
+        F3["🐙 Sonnet 尋找器<br/>GitHub SKILL.md 搜尋"]
+        F4["✨ Sonnet 尋找器<br/>新發布"]
+        F1 & F2 & F3 & F4 --> DD["🧹 去重 · 預排序 ·<br/>依 max_verify 截斷"]
+        DD --> V["🔬 Opus 驗證器<br/>擷取真實內容 · 對抗式評分 ·<br/>可疑內容檢查"]
+    end
+
+    V --> M["⚖️ 合併排序<br/>同一清單，0–10 分"]
+    M --> P["🏅 呈現前 3–5 名"]
+    P --> Q{"決定"}
+    Q -->|"auto_install: true<br/>Strong + 可信 + 無可疑內容"| R["📦 安裝並使用<br/>（一律回報）"]
+    Q -->|"預設"| S["💬 推薦 ·<br/>提議安裝"]
+    R --> T
+    S --> T["📝 記錄結果<br/>客觀、可驗證的紀錄"]
+    T --> U["🧭 提議寫入儲存庫內<br/>CLAUDE.md 提示"]
+    T -. "過往表現回饋<br/>到未來排序" .-> B
+```
+
+在 Claude Code 中全速運行，在其他環境中平滑降級：
+
+| 層級 | 環境 | 執行方式 |
+|---|---|---|
+| 🟢 **Workflow** | Claude Code（`Workflow` 工具） | 並行 Sonnet 尋找器 + 每個候選一個對抗式 Opus 驗證器 |
+| 🟡 **Agent** | 任何支援子代理的環境 | 並行尋找器代理 + 單一 Opus 級驗證代理 |
+| 🔵 **Inline** | 無子代理（如 Codex） | 相同的角度與評分標準，由代理自身循序執行 |
+
 ## 📦 安裝
 
 `autoskills` 是一個 Claude Code 技能。使用 [`skills`](https://www.npmjs.com/package/skills) CLI 安裝：
@@ -105,6 +144,10 @@ cp -r autoskills ~/.claude/skills/autoskills
 ```bash
 bash tests/check-integration.sh   # 執行所有文件檢查 + 行為測試
 ```
+
+## ⭐ 支持
+
+如果 autoskills 幫你找到了合適的技能，歡迎[**給儲存庫點個 Star**](https://github.com/B143KC47/autoskills) —— 讓更多代理找到屬於它們的技能。
 
 ## 📄 授權
 

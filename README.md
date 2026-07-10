@@ -30,6 +30,45 @@ It supersedes the online-only `find-skills` skill by adding local search, scorin
 - **Availability-aware** — only recommends skills usable right now; catalogs preferred-but-unsynced ones without recommending them.
 - **Repo-local reminders** — offers to write a consent-gated, idempotent `CLAUDE.md` block so future agents in a repo know which skills to use.
 
+## 🔍 How it works
+
+```mermaid
+flowchart TD
+    A["🎯 Your problem · repo · current task"] --> B["📇 Read config &<br/>consult registry memory"]
+    B -->|"⚡ fast path: registry already<br/>knows a Strong invokable match"| P
+    B --> C["🗂️ Gather & score<br/>LOCAL candidates"]
+    C -->|"Strong local match"| M
+    C -->|"no Strong match,<br/>or you asked for online"| DS
+
+    subgraph DS ["🌐 Deep search — multi-agent"]
+        direction TB
+        F1["🔎 Sonnet finder<br/>npx skills find"]
+        F2["🏆 Sonnet finder<br/>skills.sh leaderboard"]
+        F3["🐙 Sonnet finder<br/>GitHub SKILL.md search"]
+        F4["✨ Sonnet finder<br/>fresh releases"]
+        F1 & F2 & F3 & F4 --> DD["🧹 Dedup · pre-rank ·<br/>cap at max_verify"]
+        DD --> V["🔬 Opus verifiers<br/>fetch real content · adversarial rubric ·<br/>suspicious-content check"]
+    end
+
+    V --> M["⚖️ Merge & rank<br/>one list, scored 0–10"]
+    M --> P["🏅 Present top 3–5"]
+    P --> Q{"Decide"}
+    Q -->|"auto_install: true<br/>Strong + trusted + clean"| R["📦 Install & use<br/>(always reported)"]
+    Q -->|"default"| S["💬 Recommend ·<br/>offer install"]
+    R --> T
+    S --> T["📝 Record outcome<br/>objective, verifiable notes"]
+    T --> U["🧭 Offer repo-local<br/>CLAUDE.md reminder"]
+    T -. "track-record feeds<br/>future rankings" .-> B
+```
+
+Runs at full power in Claude Code and degrades gracefully everywhere else:
+
+| Tier | Harness | Execution |
+|---|---|---|
+| 🟢 **Workflow** | Claude Code (`Workflow` tool) | Parallel Sonnet finders + one adversarial Opus verifier per candidate |
+| 🟡 **Agent** | Any harness with subagents | Parallel finder agents + a single Opus-class verification agent |
+| 🔵 **Inline** | No subagents (e.g. Codex) | Same angles & rubric, run sequentially by the agent itself |
+
 ## 📦 Install
 
 `autoskills` is a Claude Code skill. Install it with the [`skills`](https://www.npmjs.com/package/skills) CLI:
@@ -105,6 +144,10 @@ Requires Bash and Node.js (no npm dependencies). Run the full suite:
 ```bash
 bash tests/check-integration.sh   # runs every doc check + behavioral tests
 ```
+
+## ⭐ Support
+
+If autoskills finds the right skill for you, [**star the repo**](https://github.com/B143KC47/autoskills) — it helps more agents find their skills.
 
 ## 📄 License
 
