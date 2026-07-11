@@ -6,7 +6,10 @@ set -e
 script="scripts/index-local-skills.mjs"
 tmp=$(mktemp -d)
 root="$tmp/skills"
-mkdir -p "$root/good-skill" "$root/empty-skill" "$root/bodyless-skill"
+mkdir -p "$root/good-skill" "$root/empty-skill" "$root/bodyless-skill" "$root/.system"
+
+# dot-entries (e.g. Codex's bundled ~/.codex/skills/.system) must be skipped
+printf -- '---\nname: hidden\ndescription: must not list\n---\nbody\n' > "$root/.system/SKILL.md"
 
 # ok: readable SKILL.md — with CRLF (Windows) frontmatter, which must still
 # yield a description.
@@ -26,6 +29,8 @@ node -e "require('fs').symlinkSync(process.argv[1], process.argv[2], 'dir')" \
 export AUTOSKILLS_SKILL_ROOTS="$(cygpath -w "$root" 2>/dev/null || echo "$root")"
 
 out=$(node "$script")
+# 0. Dot-entries are never listed (Codex .system bundles, .DS_Store, ...).
+! echo "$out" | grep -qF ".system"
 # 1. Statuses classified correctly, descriptions parsed through CRLF frontmatter.
 echo "$out" | grep -qF "good-skill | ok | Fine-tune helpers for tests"
 echo "$out" | grep -qF "empty-skill | empty"

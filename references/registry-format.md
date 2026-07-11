@@ -2,7 +2,7 @@
 
 The registry is the skill's persistent memory. It is HYBRID:
 - **Global store** (cross-project, read every invoke): `<skill-root>/registry/` — the installed skill's own directory (Claude Code: `~/.claude/skills/autoskills/registry/`; other harnesses: wherever the skill is installed).
-- **Project pointer** (auto-loaded each session): one line in the project's `memory/MEMORY.md` on Claude Code. On harnesses without auto-loaded memory (e.g. Codex), the equivalent line goes in the repo's `AGENTS.md` instead.
+- **Project pointer** (auto-loaded each session): one line in the project's `memory/MEMORY.md` on Claude Code. On harnesses without auto-loaded memory, the equivalent line goes in the repo's `AGENTS.md` instead (Codex auto-loads the whole `AGENTS.md` chain at session start — repo root and up, plus the global `~/.codex/AGENTS.md`; a cross-project pointer belongs in the global one).
 
 Claude Code memory is project-scoped only (no global tier), and `MEMORY.md` auto-loads the first ~200 lines each session. The global registry gives cross-project recall; the project pointer makes the agent aware the registry exists.
 

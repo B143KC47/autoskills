@@ -16,4 +16,6 @@ grep -q "references/registry-format.md" "$f"
 grep -q "references/folder-scan.md" "$f"
 grep -q "scripts/index-local-skills.mjs" "$f"
 grep -q "Step 7" "$f"
+# catalog covers Codex's user-level skills root too
+grep -q ".codex/skills" "$f"
 echo "PASS check-skill-md"

@@ -22,7 +22,7 @@ It supersedes the online-only `find-skills` skill by adding local search, scorin
 ## ✨ Features
 
 - **Local + online search** — gathers candidates from your invokable skills and the `npx skills` ecosystem, ranked together.
-- **Multi-agent deep search** — in Claude Code, online discovery runs as a `Workflow`: parallel Sonnet finders sweep four angles (ecosystem, leaderboard, fresh releases, GitHub), then an Opus verifier adversarially scores each candidate. Degrades gracefully to plain subagents, or to a fully sequential flow on harnesses without subagents (e.g. Codex).
+- **Multi-agent deep search** — in Claude Code, online discovery runs as a `Workflow`: parallel Sonnet finders sweep four angles (ecosystem, leaderboard, fresh releases, GitHub), then an Opus verifier adversarially scores each candidate. On Codex it maps onto **Codex subagents** (parallel finder workers on light models + a strong verifier); harnesses with no subagents at all get a fully sequential flow.
 - **Quality rubric** — scores each candidate on Fit, Trust, Track-record, Freshness, and Specificity, with a sanity gate that drops unreadable/placeholder skills.
 - **Config-gated auto-install** — set `auto_install: true` in `config.json` and Opus-verified **Strong** picks (Trust ≥ `trust_floor`, default 2 — reputable owner or 1K+ installs) are installed and used automatically — always reported, never silent, and every candidate's actual content is fetched and inspected for suspicious instructions before it can be installed or followed. Default is off.
 - **Persistent memory** — a hybrid registry (global store + a one-line per-project pointer) that remembers which skills solved which problems.
@@ -66,8 +66,8 @@ Runs at full power in Claude Code and degrades gracefully everywhere else:
 | Tier | Harness | Execution |
 |---|---|---|
 | 🟢 **Workflow** | Claude Code (`Workflow` tool) | Parallel Sonnet finders + one adversarial Opus verifier per candidate |
-| 🟡 **Agent** | Any harness with subagents | Parallel finder agents + a single Opus-class verification agent |
-| 🔵 **Inline** | No subagents (e.g. Codex) | Same angles & rubric, run sequentially by the agent itself |
+| 🟡 **Agent** | Any harness with subagents — incl. **Codex subagents** (GA 2026) | Parallel finder workers (light model each, up to the harness's thread cap) + a single strongest-model verification agent |
+| 🔵 **Inline** | No subagents (restricted sandboxes, older CLI builds) | Same angles & rubric, run sequentially by the agent itself |
 
 ## 📦 Install
 

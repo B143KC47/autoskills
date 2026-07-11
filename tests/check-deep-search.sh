@@ -5,6 +5,10 @@ f="references/deep-search-workflow.md"
 grep -qi "Tier 1" "$f" && grep -qi "Workflow tool" "$f"
 grep -qi "Tier 2" "$f" && grep -qi "no Workflow" "$f"
 grep -qi "Tier 3" "$f" && grep -qi "Codex" "$f"
+# Codex subagent teams are Tier 2 (GA 2026), with the CLI's thread cap respected
+grep -qi "Codex subagents" "$f"
+grep -q "max_threads" "$f"
+grep -qi "Codex subagents" SKILL.md
 # model split: sonnet finders, opus verifiers
 grep -q "model: 'sonnet'" "$f"
 grep -q "model: 'opus'" "$f"

@@ -5,9 +5,11 @@
 // given machine. We NEVER crash on a dead link, and we ALWAYS emit the skill
 // NAME — a name is a usable match signal even when its linked content is gone.
 // Usage: node index-local-skills.mjs [keyword]
-// Roots default to ~/.claude/skills and ~/.agents/skills; override with the
-// AUTOSKILLS_SKILL_ROOTS env var (platform path-delimiter-separated) — used by
-// the hermetic tests and useful for nonstandard skill locations.
+// Roots default to ~/.claude/skills, ~/.agents/skills, and ~/.codex/skills
+// (Codex CLI's user-level skills dir); override with the AUTOSKILLS_SKILL_ROOTS
+// env var (platform path-delimiter-separated) — used by the hermetic tests and
+// useful for nonstandard skill locations. Dot-entries (e.g. Codex's bundled
+// ~/.codex/skills/.system/) are skipped — they are not user skills.
 //
 // Status values:
 //   ok        SKILL.md is readable and non-empty (usable now)
@@ -23,6 +25,7 @@ const ROOTS = process.env.AUTOSKILLS_SKILL_ROOTS
   : [
       join(homedir(), '.claude', 'skills'),
       join(homedir(), '.agents', 'skills'),
+      join(homedir(), '.codex', 'skills'),
     ];
 const RANK = { ok: 3, empty: 2, unsynced: 1, missing: 0 };
 const keyword = (process.argv[2] || '').toLowerCase();
@@ -62,6 +65,7 @@ for (const root of ROOTS) {
   let names = [];
   try { names = readdirSync(root); } catch { continue; }
   for (const name of names) {
+    if (name.startsWith('.')) continue; // .system bundles, .DS_Store, etc.
     const c = classify(join(root, name));
     const prev = byName.get(name);
     if (!prev || RANK[c.status] > RANK[prev.status]) {

@@ -110,23 +110,34 @@ Build `args` as:
   the registry (each verifier looks up its own candidate; a missing name = no history).
 - `maxVerify` — `config.max_verify` (default 10).
 
-## Tier 2 — subagents, no Workflow tool
-Dispatch the finder angles as parallel general-purpose agents (Sonnet-class if the
-harness lets you choose). Dedup by normalized `source`, pre-rank and apply the
-verification cap (log dropped), then dispatch ONE Opus-class verification agent with
-the capped list, the rubric text, and the per-skill track records; require the Verified
-shape per candidate — including fetching each candidate's raw SKILL.md and setting the
-`suspicious` flag.
+## Tier 2 — subagent team, no Workflow tool (e.g. Codex subagents)
+Dispatch the finder angles as parallel subagents, splitting models by role when the
+harness allows: a cheap/fast model per finder, the strongest model (or highest
+reasoning setting) for verification. Then dedup by normalized `source`, pre-rank and
+apply the verification cap (log dropped), and dispatch ONE strong verification agent
+with the capped list, the rubric text, and the per-skill track records; require the
+Verified shape per candidate — including fetching each candidate's raw SKILL.md and
+setting the `suspicious` flag.
 
-## Tier 3 — inline (no subagents — e.g. Codex)
+**Codex subagents (GA since March 2026):** manager–worker teams are built in — no
+special syntax; ask in the prompt to "spawn parallel subagents, one per finder angle"
+(up to 8 workers; the CLI caps concurrency via `max_threads` in config.toml's
+`[agents]` section, default 4 — size the angle list to the cap). Codex recommends its
+light/mini model tier for narrow search subtasks like these finders, with the main
+model coordinating and verifying. Subagents inherit installed skills, but still inline
+the rubric text in each worker prompt so verification stays hermetic. Each worker runs
+in its own sandbox; results are collected by the manager — have every worker return
+Candidate-shaped JSON only.
+
+## Tier 3 — inline (no subagents at all — restricted sandboxes, older CLI builds)
 Run the same finder angles yourself, sequentially, with shell + web only. Dedup,
 pre-rank, cap (log dropped), then for each survivor: fetch its raw SKILL.md, check for
 suspicious instructions, and score it with `evaluation.md`, writing an `evidence` list
 of observable facts before assigning the tier. The procedure is identical — only the
 parallelism and the second model are missing.
-**Sandbox note:** if the harness blocks network by default (common on Codex), request
-approval for `npx`/web access first; if unavailable, fall back to local-only
-(SKILL.md's offline fallback) and say so.
+**Sandbox note:** if the harness blocks network by default (e.g. Codex in read-only or
+locked-down sandbox modes), request approval for `npx`/web access first; if
+unavailable, fall back to local-only (SKILL.md's offline fallback) and say so.
 
 ## After any tier
 Discard `suspicious` candidates and tier "No fit". Feed the survivors into SKILL.md

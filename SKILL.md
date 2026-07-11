@@ -42,7 +42,7 @@ Prior wins get a Track-record boost in scoring; note known gaps.
 ## Step 2 — Gather LOCAL candidates
 Two local sources, in priority order:
 1. **Invokable skills (PRIMARY).** The in-context available-skills list of the `Skill` tool — the source of truth for "usable right now".
-2. **Catalog (enrichment).** Names under `~/.claude/skills/` and `~/.agents/skills/`; some may be broken symlinks whose content is unreadable. For speed run the helper (from a shell that expands `~`, e.g. bash):
+2. **Catalog (enrichment).** Names under `~/.claude/skills/`, `~/.agents/skills/`, and `~/.codex/skills/` (Codex also reads project `.codex/skills/` and `.agents/skills/` up the repo tree); some may be broken symlinks whose content is unreadable. For speed run the helper (from a shell that expands `~`, e.g. bash):
    `node <skill-root>/scripts/index-local-skills.mjs <keyword>`
    It prints `name | status | description` (`ok` / `empty` / `unsynced` / `missing`).
 Match both sources against the query. Only invokable or `ok` entries can be recommended; the sanity gate drops the rest (mention them at most as "catalog: currently unavailable").
@@ -54,8 +54,8 @@ Match both sources against the query. Only invokable or `ok` entries can be reco
 
 Pick the highest tier your harness supports (`references/deep-search-workflow.md` has the full procedure and the Tier 1 script template):
 1. **Workflow tier** (Claude Code, `Workflow` tool): run the template — `config.finders` parallel Sonnet finder agents (ecosystem `npx skills find`, skills.sh leaderboard, GitHub SKILL.md search, web search for new releases), dedup barrier, pre-rank by installs/stars and verify the top `config.max_verify` (log any dropped — never truncate silently) with one Opus verifier each, applying `references/evaluation.md` adversarially against the candidate's ACTUAL fetched content, with structured output.
-2. **Agent tier** (subagents but no Workflow tool): parallel finder agents + one Opus verification agent over the merged, deduped, capped list.
-3. **Inline tier** (no subagents — e.g. Codex): run the same finder queries yourself sequentially, then apply the rubric to each candidate yourself. Requires only shell + web; if the sandbox blocks network, request approval first or fall back to local-only.
+2. **Agent tier** (subagent team but no Workflow tool — e.g. Codex subagents): ask the harness to spawn parallel finder workers, one angle each (cheap/light model per worker where the harness allows — Codex caps concurrency via `[agents] max_threads`), then one strongest-model verification agent over the merged, deduped, capped list.
+3. **Inline tier** (no subagents at all — restricted sandboxes, older CLI builds): run the same finder queries yourself sequentially, then apply the rubric to each candidate yourself. Requires only shell + web; if the sandbox blocks network, request approval first or fall back to local-only.
 
 Capture per candidate: name, owner/source, install count, stars if available.
 - **Offline fallback:** a finder whose network/`npx` call fails returns nothing — continue with the remaining sources (or local candidates only) and say so in Step 5.
